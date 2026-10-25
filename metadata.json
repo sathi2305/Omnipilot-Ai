@@ -1,0 +1,6 @@
+{
+  "name": "OmniPilot X",
+  "description": "Autonomous software engineering workbench with isolated sandboxing, bounded repairs, and verifiable evidence generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

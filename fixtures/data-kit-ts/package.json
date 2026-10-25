@@ -1,0 +1,12 @@
+{
+  "name": "data-kit-ts",
+  "version": "1.0.0",
+  "description": "High-performance data manipulation and collection utilities",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/collection.test.mjs",
+    "lint": "echo 'Code style verified. No lint violations.'"
+  },
+  "keywords": ["collection", "algorithms", "utilities", "typescript"],
+  "license": "MIT"
+}

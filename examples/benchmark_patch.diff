@@ -1,0 +1,20 @@
+--- a/src/collection.mjs
++++ b/src/collection.mjs
+@@ -15,15 +15,14 @@ export function chunk(array, size = 1) {
+-  if (size <= 0) {
+-    return [];
+-  }
+-  const fullChunkThreshold = Math.floor(array.length / size) * size;
+-  const result = [];
+-  for (let i = 0; i < fullChunkThreshold; i += size) {
+-    result.push(array.slice(i, i + size));
+-  }
++  if (size <= 0) {
++    throw new RangeError('Chunk size must be greater than 0');
++  }
++  const result = [];
++  for (let i = 0; i < array.length; i += size) {
++    result.push(array.slice(i, i + size));
++  }
+   return result;
+ }

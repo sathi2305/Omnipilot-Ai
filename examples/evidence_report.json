@@ -1,0 +1,74 @@
+{
+  "id": "evid_1776342891000",
+  "taskId": "ops_1776342890_8f2a1b",
+  "taskTitle": "Resolve Edge-Case Regression in chunk() & Enforce RangeError Contract",
+  "generatedAt": "2026-10-16T14:47:30.000Z",
+  "finalStatus": "VERIFIED_SUCCESS",
+  "totalDurationMs": 85,
+  "repairAttemptsUsed": 1,
+  "maxRepairLimit": 2,
+  "patches": [
+    {
+      "id": "patch_1776342891_att1",
+      "timestamp": "2026-10-16T14:47:25.000Z",
+      "fileModified": "src/collection.mjs",
+      "unifiedDiff": "@@ -15,15 +15,14 @@ export function chunk(array, size = 1) {\n-  if (size <= 0) {\n-    return [];\n-  }\n-  const fullChunkThreshold = Math.floor(array.length / size) * size;\n-  const result = [];\n-  for (let i = 0; i < fullChunkThreshold; i += size) {\n-    result.push(array.slice(i, i + size));\n-  }\n+  if (size <= 0) {\n+    throw new RangeError('Chunk size must be greater than 0');\n+  }\n+  const result = [];\n+  for (let i = 0; i < array.length; i += size) {\n+    result.push(array.slice(i, i + size));\n+  }\n   return result;\n }",
+      "linesAdded": 8,
+      "linesRemoved": 9,
+      "repairAttempt": 1,
+      "appliedBy": "deterministic_engine"
+    }
+  ],
+  "executionRuns": [
+    {
+      "id": "exec_1776342890100",
+      "timestamp": "2026-10-16T14:47:20.000Z",
+      "attemptNumber": 0,
+      "command": "node --test tests/collection.test.mjs",
+      "args": ["--test", "tests/collection.test.mjs"],
+      "exitCode": 1,
+      "durationMs: 42,
+      "stdout": "✖ chunk handles uneven lengths and retains trailing remainder elements\n✖ chunk throws RangeError when size is <= 0\nℹ tests 5\nℹ pass 3\nℹ fail 2",
+      "stderr": "",
+      "status": "failed"
+    },
+    {
+      "id": "exec_1776342890500",
+      "timestamp": "2026-10-16T14:47:28.000Z",
+      "attemptNumber": 1,
+      "command": "node --test tests/collection.test.mjs",
+      "args": ["--test", "tests/collection.test.mjs"],
+      "exitCode": 0,
+      "durationMs": 43,
+      "stdout": "✔ groupBy correctly categorizes objects by string key\n✔ compact strips all falsy values accurately\n✔ chunk divides array evenly into balanced partitions\n✔ chunk handles uneven lengths and retains trailing remainder elements\n✔ chunk throws RangeError when size is <= 0\nℹ tests 5\nℹ pass 5\nℹ fail 0",
+      "stderr": "",
+      "status": "passed"
+    }
+  ],
+  "diagnosticHistory": [
+    {
+      "id": "diag_1776342891_att1",
+      "timestamp": "2026-10-16T14:47:22.000Z",
+      "failureCategory": "assertion_mismatch",
+      "failingTestName": "chunk throws RangeError when size is <= 0",
+      "sourceFile": "src/collection.mjs",
+      "errorSnippet": "Missing expected exception (RangeError)",
+      "rootCauseAnalysis": "Function chunk() returns empty array instead of throwing RangeError when chunk size is zero or negative.",
+      "proposedPatchStrategy": "Add strict size boundary validation: throw new RangeError(\"Chunk size must be greater than 0\") when size <= 0.",
+      "repairAttempt": 1
+    }
+  ],
+  "acceptanceCriteria": [
+    { "id": "c1", "description": "chunk() evenly partitions array without data loss", "verified": true },
+    { "id": "c2", "description": "chunk() retains trailing remainder slices for odd array lengths", "verified": true },
+    { "id": "c3", "description": "chunk() throws RangeError if size <= 0", "verified": true },
+    { "id": "c4", "description": "groupBy() and compact() utilities maintain 100% regression pass rate", "verified": true }
+  ],
+  "manifestHash": "a8f34bc89e31d6d2a4501ef5b8423ef87b0a88cd536e2f18390b1ad837fc90e4",
+  "environmentMetadata": {
+    "nodeVersion": "v22.14.0",
+    "platform": "linux-x64",
+    "reproducibilityTag": "OMNIPILOT_X_OFFLINE_VERIFIED",
+    "engineMode": "deterministic_offline"
+  }
+}
